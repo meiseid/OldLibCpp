@@ -2,9 +2,9 @@
 //
 #include "libcpp.h"
 
-cFile::cFile( void )
+cFile::cFile( const char *path )
 {
-	PATH = NULL;
+	PATH = (char*)path;
 	DATA = NULL;
 	SIZE = 0;
 	FP = NULL;

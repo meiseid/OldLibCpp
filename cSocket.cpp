@@ -146,8 +146,7 @@ void cSocket::read( void )
 	//テンポラリファイルのオープン
 	sprintf( fnm,"socket_read.%d.tmp",getpid() );
 
-	CFILE = new cFile();
-	CFILE->PATH = fnm;
+	CFILE = new cFile( fnm );
 
 	if( !CFILE->open("wb") ) return;
 	while( 1 ){

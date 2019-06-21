@@ -2,6 +2,35 @@
 //
 #include "libcpp.h"
 
+int cTool::addString( std::string &str,const char *fmt, ... )
+{
+	int ret = 0; va_list va; char *ptr = NULL;
+
+	va_start( va,fmt );
+	ret = vasprintf( &ptr,fmt,va );
+	va_end( va );
+
+	if( ret >= 0 && ptr ){
+		str.append( ptr );
+		free( ptr );
+	}else ret = 0;
+
+	return ret;
+}
+
+void cTool::replaceString( std::string &str,const char *from,const char *to )
+{
+	std::string s_from = std::string(from);
+	std::string s_to = std::string(to);
+
+	std::string::size_type pos( str.find( s_from ) );
+ 
+	while( pos != std::string::npos ){
+		str.replace( pos,s_from.length(),s_to );
+		pos = str.find( s_from,pos + s_to.length() );
+	}
+}
+
 char* cTool::urlDecode( const char *src,char *dst )
 {
 	int i,j,num; char buf[8];
@@ -82,8 +111,7 @@ bool cTool::readConfigFile( const char *path,cArray &array )
 {
 	char *mem,*p1,*p2,*p3,*p4,key[MAX_SHORT_NAME],*val; int i,n; size_t len;
 
-	cFile file = cFile();
-	file.PATH = (char*)path;
+	cFile file = cFile( path );
 	file.read();
 
 	if( !file.DATA ) return false; //read fail
@@ -100,10 +128,10 @@ bool cTool::readConfigFile( const char *path,cArray &array )
 		if( p3 != mem ) p3++; if( *p3 == '#' ) continue;
 		if( (p4 = strchr( p2 + 2,'"' )) == NULL ) p4 = strchr( p2 + 2,'\0' );
 		len = (size_t)p2 - (size_t)p3;
-		if( len <= 0 || len >= MAX_SHORT_NAME ) continue; //長い項目名はダメ
+		if( len <= 0 || len >= MAX_SHORT_NAME ) continue; //カラの内容 または 長い項目名はダメ
 		memcpy( key,p3,len ); key[len] = '\0';
 		p2 += 2; len = (size_t)p4 - (size_t)p2;
-		if( (val = (char*)malloc( len + 1 )) != NULL ){
+		if( len > 0 && (val = (char*)malloc( len + 1 )) != NULL ){
 			memcpy( val,p2,len ); val[len] = '\0';
 			cData *data = array.indexAt(i++);
 			strcpy( data->SNAME,key );
@@ -130,7 +158,8 @@ bool cTool::readSinglePart( char *mem,size_t len,char sep,cArray &array )
 		k_len = (size_t)to - (size_t)fr; bg = to + 1;
 		if( (en = strchr( bg,sep )) != NULL ){ *(to = en) = '\0'; }
 		else{ en = mem + len; to = en - 1; }
-		if( k_len > 0 && k_len < MAX_SHORT_NAME ){ //長い項目名はダメ
+		if( bg[0] != '\0' && //カラの内容 または 長い項目名はダメ
+			k_len > 0 && k_len < MAX_SHORT_NAME ){ 
 			memcpy( key,fr,k_len ); key[k_len] = '\0';
 			if( array.snameAt( key ) == NULL ){ //未登録の項目
 				if( (val = urlDecode( bg,NULL )) != NULL ){

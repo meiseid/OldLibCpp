@@ -12,7 +12,7 @@ public:
 	size_t SIZE;
 	FILE *FP;
 
-	cFile( void );
+	cFile( const char *path );
 	virtual	~cFile( void );
 
 	bool open( const char *mode );

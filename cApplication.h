@@ -9,6 +9,8 @@ class cApplication
 public:
 	cArray CONFIG;
 	cArray CGI;
+	struct tm DATE;
+	char *DEBUG_DATE;
 
 	cApplication( void );
 	virtual	~cApplication( void );
