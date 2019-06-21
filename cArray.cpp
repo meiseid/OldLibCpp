@@ -2,24 +2,37 @@
 //
 #include "libcpp.h"
 
-cArray::cArray( int count )
+cArray::cArray( void )
 {
-	ARRAY = new std::vector<cData>(count);
+	ARRAY = NULL;
 }
 
 cArray::~cArray( void )
 {
-	delete ARRAY;
+	if( ARRAY ) delete ARRAY;
+}
+
+void cArray::init( int count )
+{
+	if( ARRAY ) delete ARRAY;
+	ARRAY = new std::vector<cData>(count);
+}
+
+int cArray::count( void )
+{
+	return ARRAY ? ARRAY->size():0;
 }
 
 cData* cArray::indexAt( int index )
 {
+	if( !ARRAY ) return NULL;
 	if( index >= ARRAY->size() ) return NULL;
 	return &(ARRAY->at( index ));
 }
 
 cData* cArray::snameAt( const char *sname )
 {
+	if( !ARRAY ) return NULL;
 	int i,n;
 	for( i = 0,n = ARRAY->size(); i < n; i++ ){
 		if( !strnull(ARRAY->at(i).SNAME) &&
@@ -32,6 +45,7 @@ cData* cArray::snameAt( const char *sname )
 
 cData* cArray::lnameAt( const char *lname )
 {
+	if( !ARRAY ) return NULL;
 	int i,n;
 	for( i = 0,n = ARRAY->size(); i < n; i++ ){
 		if( !strnull(ARRAY->at(i).LNAME) &&
@@ -41,5 +55,3 @@ cData* cArray::lnameAt( const char *lname )
 	}
 	return NULL;
 }
-
-

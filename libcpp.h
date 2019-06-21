@@ -24,6 +24,8 @@
 #include <openssl/rand.h>
 
 //C++
+#include <iostream>
+#include <string>
 #include <vector>
 
 //defs
@@ -39,6 +41,7 @@
 #include "cArray.h"
 #include "cFile.h"
 #include "cSocket.h"
+#include "cTool.h"
 #include "cApplication.h"
 
 #endif //__libcpp_h__

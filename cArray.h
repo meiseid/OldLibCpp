@@ -9,8 +9,10 @@ class cArray
 public:
 	std::vector<cData> *ARRAY;
 
-	cArray( int count );
+	cArray( void );
 	virtual	~cArray( void );
+	void init( int count );
+	int count( void );
 	cData* indexAt( int index );
 	cData* snameAt( const char *sname );
 	cData* lnameAt( const char *lname );

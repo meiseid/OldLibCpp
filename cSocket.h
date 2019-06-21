@@ -18,7 +18,7 @@ public:
 	uint8_t *BODY;
 	size_t BLEN;
 
-	cSocket( const char *host,const char *port );
+	cSocket( void );
 	virtual	~cSocket( void );
 
 	bool connect( void );

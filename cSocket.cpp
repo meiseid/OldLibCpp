@@ -2,10 +2,10 @@
 //
 #include "libcpp.h"
 
-cSocket::cSocket( const char *host,const char *port )
+cSocket::cSocket( void )
 {
-	HOST = (char*)host;
-	PORT = (char*)port;
+	HOST = NULL;
+	PORT = NULL;
 	HANDLE = (-1);
 	H_SSL_CTX = NULL;
 	H_SSL = NULL;
@@ -146,7 +146,8 @@ void cSocket::read( void )
 	//テンポラリファイルのオープン
 	sprintf( fnm,"socket_read.%d.tmp",getpid() );
 
-	CFILE = new cFile( fnm );
+	CFILE = new cFile();
+	CFILE->PATH = fnm;
 
 	if( !CFILE->open("wb") ) return;
 	while( 1 ){

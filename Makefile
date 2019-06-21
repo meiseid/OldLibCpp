@@ -7,6 +7,7 @@ SRCS	=	\
 	cArray.cpp \
 	cFile.cpp \
 	cSocket.cpp \
+	cTool.cpp \
 	cApplication.cpp
 CC_DBG	+=	-g
 CC_OPT	+=
