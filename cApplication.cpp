@@ -2,7 +2,7 @@
 //
 #include "libcpp.h"
 
-cApplication::cApplication( void )
+cApplication::cApplication( int argc,char **argv )
 {
 	readCgiParams();
 
@@ -29,8 +29,15 @@ cApplication::~cApplication( void )
 
 }
 
-void cApplication::run( int argc,char **argv )
+void cApplication::run( void )
 {
+
+}
+
+void cApplication::finish( void )
+{
+
+
 
 }
 

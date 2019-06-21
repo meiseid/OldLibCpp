@@ -7,14 +7,19 @@
 class cApplication
 {
 public:
+	std::string LOG;
+	std::string ERR;
+
 	cArray CONFIG;
 	cArray CGI;
 	struct tm DATE;
 	char *DEBUG_DATE;
 
+	cApplication( int argc,char **argv );
 	cApplication( void );
 	virtual	~cApplication( void );
-	virtual void run( int argc,char **argv );
+	virtual void run( void );
+	virtual void finish( void );
 	void readCgiParams( void );
 };
 
