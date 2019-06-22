@@ -9,7 +9,6 @@ class LApplication
 public:
 	std::string mLogPath;
 	std::string mLogStr;
-	std::string mErrStr;
 
 	std::vector<SParam> mConfig;
 	std::vector<SParam> mCgi;
