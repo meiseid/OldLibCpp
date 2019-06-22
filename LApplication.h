@@ -7,6 +7,7 @@
 class LApplication
 {
 public:
+	std::string mLogPath;
 	std::string mLogStr;
 	std::string mErrStr;
 
@@ -15,6 +16,9 @@ public:
 
 	struct tm mDate;
 	char* mDateStr;
+
+	std::string mOutHead;
+	std::string mOutBody;
 
 	LApplication( int argc,char **argv );
 	LApplication( void );

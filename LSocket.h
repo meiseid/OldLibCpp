@@ -4,7 +4,7 @@
 #define __LSocket_h__
 #include "libcpp.h"
 
-#define DSocketTimeout 10
+#define dSocketTimeout 10
 
 class LSocket
 {

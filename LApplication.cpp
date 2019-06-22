@@ -4,6 +4,8 @@
 
 LApplication::LApplication( int argc,char **argv )
 {
+	mLogStr.append( LTool::clockText( "BEGINNING OF CGI" ) );
+
 	char *ptr;
 
 	readCgiParams();
@@ -37,9 +39,26 @@ void LApplication::run( void )
 
 void LApplication::finish( void )
 {
+	mLogStr.append( LTool::clockText( "ENTER PRINT" ) );
 
+	if( !mOutHead.empty() ){
+		std::cout << mOutHead;
+		mLogStr.append( mOutHead );
+	}
+	if( !mOutBody.empty() ){
+		std::cout << mOutBody;
+		mLogStr.append( mOutBody );
+	}
 
+	mLogStr.append( LTool::clockText( "LEAVE PRINT" ) );
 
+	mLogStr.append( LTool::clockText( "END OF CGI" ) );
+
+	if( !mLogPath.empty() && !mLogStr.empty() ){
+		std::ofstream logfile( mLogPath );
+		logfile << mLogStr;
+		logfile.close();
+	}
 }
 
 void LApplication::readCgiParams( void )
@@ -55,5 +74,9 @@ void LApplication::readCgiParams( void )
 	}
 	if( !mem ) return; //NOT CGI
 
+	mLogStr.append( mem,len );
+	mLogStr.append( "\n" );
+
 	LTool::readSinglePart( mem,len,'&',mCgi );
+
 }

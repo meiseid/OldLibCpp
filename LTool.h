@@ -7,7 +7,7 @@
 class LTool
 {
 public:
-	static void strFullTime( char *str );
+	static std::string clockText( std::string label );
 	static int strAppend( std::string &str,const char *fmt, ... );
 	static void strReplace( std::string &str,std::string from,std::string to );
 	static void urlDecode( std::string &src,std::string &dst );

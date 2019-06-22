@@ -2,18 +2,23 @@
 //
 #include "libcpp.h"
 
-void LTool::strFullTime( char *str )
+std::string LTool::clockText( std::string label )
 {
-	time_t tm; struct tm date; struct timeval tv; int msec;
+	time_t tm; struct tm date; struct timeval tv; int msec; char tstr[128];
 
 	tm = time( NULL );
 	date = *(localtime( &tm ));
 	gettimeofday( &tv,NULL );
 	msec = (int)(tv.tv_usec / 1000);
 
-	sprintf( str,"%04d-%02d-%02d %02d:%02d:%02d.%03d",
+	sprintf( tstr,"%04d-%02d-%02d %02d:%02d:%02d.%03d ",
 		date.tm_year + 1900,date.tm_mon + 1,
 		date.tm_mday,date.tm_hour,date.tm_min,date.tm_sec,msec );
+
+	std::string ret( tstr );
+	ret.append( label );
+	ret.append( "\n" );
+	return ret;
 }
 
 int LTool::strAppend( std::string &str,const char *fmt, ... )
@@ -44,6 +49,7 @@ void LTool::strReplace( std::string &str,std::string from,std::string to )
 
 void LTool::urlDecode( std::string &src,std::string &dst )
 {
+	if( src.empty() ) return; //NOP
 	int i,num; char buf[8];
 	const char *c_src = src.c_str();
 
@@ -71,6 +77,7 @@ void LTool::urlDecode( std::string &src,std::string &dst )
 
 void LTool::urlEncode( std::string &src,std::string &dst )
 {
+	if( src.empty() ) return; //NOP
 	int i; char buf[8];
 	const char *c_src = src.c_str();
 

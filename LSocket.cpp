@@ -29,7 +29,7 @@ bool LSocket::connect( void )
 		if( servhost ) memcpy( (char*)&addr.sin_addr,servhost->h_addr,servhost->h_length );
 		else addr.sin_addr.s_addr = inet_addr( mHost.c_str() );	
 		addr.sin_port = htons( std::stoi( mPort ) );
-		setTimeout( DSocketTimeout );
+		setTimeout( dSocketTimeout );
 		ret = ::connect( mHandle,(struct sockaddr *)&addr,sizeof(addr) );
 		if( ret >= 0 ){
 			if( mPort == "443" ){
