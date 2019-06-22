@@ -3,12 +3,10 @@ MKTYPE	=	StaticLibrary
 MKLANG	=	C++
 TARGET	=	libcpp.a
 SRCS	=	\
-	cData.cpp \
-	cArray.cpp \
-	cFile.cpp \
-	cSocket.cpp \
-	cTool.cpp \
-	cApplication.cpp
+	LFile.cpp \
+	LSocket.cpp \
+	LTool.cpp \
+	LApplication.cpp
 CC_DBG	+=	-g
 CC_OPT	+=
 CC_INC	+=

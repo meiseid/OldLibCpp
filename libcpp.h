@@ -26,23 +26,24 @@
 //C++
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 
-//defs
-
+//defines
 #define strnull(x) (x == NULL || x[0] == '\0')
 #define countof(x) sizeof(x) / sizeof(x[0])
 
-#define MAX_SHORT_NAME 32
-#define SOCKET_TIMEOUT 10
+//structs
+typedef struct {
+	std::string mName;
+	std::string mText;
+}SParam;
 
-//Original
-#include "cData.h"
-#include "cArray.h"
-#include "cFile.h"
-#include "cSocket.h"
-#include "cTool.h"
-#include "cApplication.h"
+//classes
+#include "LFile.h"
+#include "LSocket.h"
+#include "LTool.h"
+#include "LApplication.h"
 
 #endif //__libcpp_h__
