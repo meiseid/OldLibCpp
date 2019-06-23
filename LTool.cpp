@@ -148,11 +148,11 @@ void LTool::readSinglePart( char *mem,size_t len,char sep,std::vector<SParam> &p
 	}
 }
 
-const char* LTool::paramText( const char *key,const std::vector<SParam> &params )
+char* LTool::paramText( const char *key,const std::vector<SParam> &params )
 {
 	for( int i = 0,n = params.size(); i < n; i++ ){
 		if( strcasecmp( params.at( i ).mName.c_str(),key ) == 0 ){
-			return params.at( i ).mText.c_str();
+			return (char*)params.at( i ).mText.c_str();
 		}
 	}
 	return NULL;

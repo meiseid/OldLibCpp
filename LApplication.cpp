@@ -6,7 +6,7 @@ LApplication::LApplication( int argc,char **argv )
 {
 	mLogStr.append( LTool::clockText( "BEGINNING OF CGI" ) );
 
-	char *ptr;
+	char *p;
 
 	readCgiParams();
 
@@ -16,10 +16,9 @@ LApplication::LApplication( int argc,char **argv )
 	mktime( &mDate );
 	mDateStr = NULL;
 
-	if( (ptr = (char*)LTool::paramText( "debug_date",mCgi )) != NULL &&
-		strlen( ptr ) == 12 ){ //YYYYMMDDHHMM
-		mDateStr = ptr;
-		sscanf( ptr,"%04d%02d%02d%02d%02d",&mDate.tm_year,&mDate.tm_mon,
+	if( (p = LTool::paramText( "dgdate",mCgi )) != NULL && strlen( p ) == 12 ){
+		mDateStr = p; //YYYYMMDDHHMM
+		sscanf( p,"%04d%02d%02d%02d%02d",&mDate.tm_year,&mDate.tm_mon,
 			&mDate.tm_mday,&mDate.tm_hour,&mDate.tm_min );
 		mDate.tm_year -= 1900; 
 		mDate.tm_mon--;
