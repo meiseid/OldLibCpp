@@ -29,6 +29,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <array>
 
 //defines
 #define strnull(x) (x == NULL || x[0] == '\0')
