@@ -2,51 +2,6 @@
 //
 #include "libcpp.h"
 
-std::string LTool::clockText( std::string label )
-{
-	time_t tm; struct tm date; struct timeval tv; int msec; char tstr[128];
-
-	tm = time( NULL );
-	date = *(localtime( &tm ));
-	gettimeofday( &tv,NULL );
-	msec = (int)(tv.tv_usec / 1000);
-
-	sprintf( tstr,"%04d-%02d-%02d %02d:%02d:%02d.%03d ",
-		date.tm_year + 1900,date.tm_mon + 1,
-		date.tm_mday,date.tm_hour,date.tm_min,date.tm_sec,msec );
-
-	std::string ret( tstr );
-	ret.append( label );
-	ret.append( "\n" );
-	return ret;
-}
-
-int LTool::strAppend( std::string &str,const char *fmt, ... )
-{
-	int ret = 0; va_list va; char *ptr = NULL;
-
-	va_start( va,fmt );
-	ret = vasprintf( &ptr,fmt,va );
-	va_end( va );
-
-	if( ret >= 0 && ptr ){
-		str.append( ptr );
-		free( ptr );
-	}else ret = 0;
-
-	return ret;
-}
-
-void LTool::strReplace( std::string &str,std::string from,std::string to )
-{
-	std::string::size_type pos( str.find( from ) );
-
-	while( pos != std::string::npos ){
-		str.replace( pos,from.length(),to );
-		pos = str.find( from,pos + to.length() );
-	}
-}
-
 void LTool::urlDecode( std::string &src,std::string &dst )
 {
 	if( src.empty() ) return; //NOP
@@ -96,6 +51,18 @@ void LTool::urlEncode( std::string &src,std::string &dst )
 			dst.append( buf,3 );
 		}
 	}
+}
+
+std::string LTool::readTextFile( const char *path )
+{
+	std::string reply = std::string();
+	LFile file = LFile();
+	file.mPath.append( path );
+	file.readTextFile();
+	if( !file.mText.empty() ){
+		reply.append( file.mText );
+	}
+	return reply;
 }
 
 void LTool::readConfigFile( std::string path,std::vector<SParam> &params )
@@ -156,5 +123,50 @@ char* LTool::paramText( const char *key,const std::vector<SParam> &params )
 		}
 	}
 	return NULL;
+}
+
+std::string LTool::clockText( std::string label )
+{
+	time_t tm; struct tm date; struct timeval tv; int msec; char tstr[128];
+
+	tm = time( NULL );
+	date = *(localtime( &tm ));
+	gettimeofday( &tv,NULL );
+	msec = (int)(tv.tv_usec / 1000);
+
+	sprintf( tstr,"%04d-%02d-%02d %02d:%02d:%02d.%03d ",
+		date.tm_year + 1900,date.tm_mon + 1,
+		date.tm_mday,date.tm_hour,date.tm_min,date.tm_sec,msec );
+
+	std::string ret( tstr );
+	ret.append( label );
+	ret.append( "\n" );
+	return ret;
+}
+
+int LTool::strAppend( std::string &str,const char *fmt, ... )
+{
+	int ret = 0; va_list va; char *ptr = NULL;
+
+	va_start( va,fmt );
+	ret = vasprintf( &ptr,fmt,va );
+	va_end( va );
+
+	if( ret >= 0 && ptr ){
+		str.append( ptr );
+		free( ptr );
+	}else ret = 0;
+
+	return ret;
+}
+
+void LTool::strReplace( std::string &str,std::string from,std::string to )
+{
+	std::string::size_type pos( str.find( from ) );
+
+	while( pos != std::string::npos ){
+		str.replace( pos,from.length(),to );
+		pos = str.find( from,pos + to.length() );
+	}
 }
 
