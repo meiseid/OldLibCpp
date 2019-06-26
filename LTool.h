@@ -7,6 +7,7 @@
 class LTool
 {
 public:
+	static int sizeFile( const char *path,time_t *mtime );
 	static void urlDecode( std::string &src,std::string &dst );
 	static void urlEncode( std::string &src,std::string &dst );
 	static std::string readTextFile( const char *path );

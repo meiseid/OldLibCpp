@@ -2,6 +2,21 @@
 //
 #include "libcpp.h"
 
+int LTool::sizeFile( const char *path,time_t *mtime )
+{
+	struct stat status;
+
+	if( mtime ) *mtime = 0;
+
+	if( strnull(path) ) return (-1);
+
+	if( stat( path, &status ) == 0 ){
+		if( mtime ) *mtime = status.st_mtime;
+		return status.st_size; //file size
+	}
+	return (-1); //not exists
+}
+
 void LTool::urlDecode( std::string &src,std::string &dst )
 {
 	if( src.empty() ) return; //NOP
