@@ -159,6 +159,33 @@ std::string LTool::clockText( std::string label )
 	return ret;
 }
 
+void LTool::getDateText( const struct tm *src,char *dst,size_t len )
+{
+	if( !src || !dst ) return; //NOP
+	if( len <= 0 ) len = 14; //Default
+
+	static const char *mons[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+	static const char *week[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+
+	if( len == 32 || len == 34 ){ //for cookie or rss-pubDate
+		struct tm gmt; memcpy( &gmt,src,sizeof(gmt) );
+		if( len == 32 ){ //cookie
+			gmt.tm_hour -= 9; mktime( &gmt );
+			sprintf( dst,"%s, %d-%s-%04d %02d:%02d:%02d GMT",week[gmt.tm_wday],
+				gmt.tm_mday,mons[gmt.tm_mon],gmt.tm_year + 1900,gmt.tm_hour,gmt.tm_min,gmt.tm_sec );
+		}
+		else{ //rss-pubDate
+			sprintf( dst,"%s, %02d %s %04d %02d:%02d:%02d +0900",week[gmt.tm_wday],
+				gmt.tm_mday,mons[gmt.tm_mon],gmt.tm_year + 1900,gmt.tm_hour,gmt.tm_min,gmt.tm_sec );
+		}
+	}
+	else if( len == 10 ) sprintf( dst,"%04d-%02d-%02d",src->tm_year + 1900,src->tm_mon + 1,src->tm_mday );
+	else if( len == 14 ) sprintf( dst,"%04d%02d%02d%02d%02d%02d",src->tm_year + 1900,src->tm_mon + 1,
+		src->tm_mday,src->tm_hour,src->tm_min,src->tm_sec );
+	else sprintf( dst,"%04d-%02d-%02d %02d:%02d:%02d",src->tm_year + 1900,src->tm_mon + 1,
+		src->tm_mday,src->tm_hour,src->tm_min,src->tm_sec );
+}
+
 int LTool::strAppend( std::string &str,const char *fmt, ... )
 {
 	int ret = 0; va_list va; char *ptr = NULL;

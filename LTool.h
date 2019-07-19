@@ -15,6 +15,7 @@ public:
 	static void readSinglePart( char *mem,size_t len,char sep,std::vector<SParam> &params );
 	static char* paramText( const char *key,const std::vector<SParam> &params );
 	static std::string clockText( std::string label );
+	static void getDateText( const struct tm *src,char *dst,size_t len );
 	static int strAppend( std::string &str,const char *fmt, ... );
 	static void strReplace( std::string &str,std::string from,std::string to );
 };
