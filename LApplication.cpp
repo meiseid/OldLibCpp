@@ -9,11 +9,12 @@ LApplication::LApplication( int argc,char **argv )
 	char *p;
 
 	readCgiParams();
+	readCookieParams();
 
 	time_t tm = time( NULL );
 	mDate = *(localtime( &tm ));
 	mDate.tm_sec = 0; //秒は常に0
-	mktime( &mDate );
+	mTime = mktime( &mDate );
 	mDateStr = NULL;
 
 	if( (p = LTool::paramText( "dgdate",mCgi )) != NULL && strlen( p ) == 12 ){
@@ -22,7 +23,7 @@ LApplication::LApplication( int argc,char **argv )
 			&mDate.tm_mday,&mDate.tm_hour,&mDate.tm_min );
 		mDate.tm_year -= 1900; 
 		mDate.tm_mon--;
-		mktime( &mDate );
+		mTime = mktime( &mDate );
 	}
 }
 
@@ -78,4 +79,25 @@ void LApplication::readCgiParams( void )
 
 	LTool::readSinglePart( mem,len,'&',mCgi );
 
+}
+
+void LApplication::readCookieParams( void )
+{
+	char *ptr,*mem = NULL; size_t len = 0; int i,j;
+
+	if( (ptr = getenv( "HTTP_COOKIE" )) != NULL && (len = strlen( ptr )) > 0 &&
+		(mem = (char*)malloc( len + 32 )) != NULL ){
+		for( i = 0,j = 0; ptr[i] != '\0'; i++ ){
+			if( ptr[i] == ';' && ptr[i + 1] == ' ' ){
+				mem[j++] = ptr[i]; i++;
+			}
+			else{
+				mem[j++] = ptr[i];
+			}
+		}
+		mem[j] = '\0'; len = j;
+		mLogStr.append( mem,len);
+		mLogStr.append( "\n" );
+		LTool::readSinglePart( mem,len,';',mCookie );
+	}
 }
