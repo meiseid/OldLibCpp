@@ -35,8 +35,17 @@ bool LSocket::connect( void )
 			if( mPort == "443" ){
 				SSL_load_error_strings();
 				SSL_library_init();
+// v1.0.2n 0x100020efL 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+				if( (mSSLCtx = SSL_CTX_new( TLS_client_method() )) != NULL ){
+					SSL_CTX_set_min_proto_version(mSSLCtx, TLS1_1_VERSION);
+#else
 				if( (mSSLCtx = SSL_CTX_new( SSLv23_client_method() )) != NULL ){
+					SSL_CTX_set_options(mSSLCtx,SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1);
+#endif
+					//if( SSL_CTX_load_verify_locations(mSSLCtx, CA_BUNDLE_FILE, nullptr) != 0 ){
 					if( (mSSL = SSL_new( mSSLCtx )) != NULL ){
+						SSL_set_tlsext_host_name( mSSL,mHost.c_str() );
 						if( (ret = SSL_set_fd( mSSL,mHandle )) != 0 ){
 							RAND_poll();
 							while( RAND_status() == 0 ){
@@ -48,7 +57,9 @@ bool LSocket::connect( void )
 							}
 						}
 					}
+					//}
 				}
+				ERR_print_errors_fp( stderr );
 			}
 			else{
 				return true; //complete
