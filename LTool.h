@@ -19,6 +19,8 @@ public:
 	static int strAppend( std::string &str,const char *fmt, ... );
 	static void strReplace( std::string &str,std::string from,std::string to );
 	static void makeCostString( int cost_num,char *cost_str );
+	static int widthText( const char *text );
+	static void trimingString( const char *src,char *dst,int lim,const char *ccr,const char *trm );
 };
 
 #endif //__LTool_h__
