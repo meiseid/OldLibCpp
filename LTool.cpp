@@ -212,3 +212,21 @@ void LTool::strReplace( std::string &str,std::string from,std::string to )
 	}
 }
 
+void LTool::makeCostString( int cost_num,char *cost_str )
+{
+	char cost[32 + 1],tsoc[32 + 1];
+	int i,j,k; size_t len;
+
+	len = sprintf( cost,"%d",cost_num );
+
+	for( i = 0,k = 1,j = (len - 1); j >= 0; i++,k++,j-- ){
+		tsoc[i] = cost[j];
+		if( k % 3 == 0 && (j - 1) >= 0 ) tsoc[++i] = ',';
+	}tsoc[i] = '\0';
+
+	len = strlen( tsoc );
+	for( i = 0,j = (len - 1); j >= 0; i++,j-- ){
+		cost_str[i] = tsoc[j];
+	}
+	cost_str[i] = '\0';
+}
