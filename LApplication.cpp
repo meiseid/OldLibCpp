@@ -33,6 +33,12 @@ LApplication::LApplication( int argc,char **argv )
 	else{
 		mClientIp.append( "127.0.0.1" );
 	}
+	//mClientIp = std::string( "182.171.232.49, 64.252.172.75" );
+
+	std::string::size_type n = mClientIp.find(',');
+	if( n != std::string::npos ){
+		mClientIp = mClientIp.substr( 0,n );
+	}
 }
 
 LApplication::~LApplication( void )
