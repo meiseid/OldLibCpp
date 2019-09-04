@@ -18,6 +18,8 @@ public:
 	time_t mTime;
 	char* mDateStr;
 
+	std::string mClientIp;
+
 	std::string mOutHead;
 	std::string mOutBody;
 

@@ -25,6 +25,14 @@ LApplication::LApplication( int argc,char **argv )
 		mDate.tm_mon--;
 		mTime = mktime( &mDate );
 	}
+
+	if( (p = getenv( "HTTP_X_FORWARDED_FOR" )) != NULL ||
+		(p = getenv( "REMOTE_ADDR" )) != NULL ){
+		mClientIp.append( p );
+	}
+	else{
+		mClientIp.append( "127.0.0.1" );
+	}
 }
 
 LApplication::~LApplication( void )
