@@ -311,3 +311,117 @@ void LTool::trimingString( const char *src,char *dst,int lim,const char *ccr,con
 	}
 }
 
+static struct{ char han; const char *zen; }gHanZenTbl[] = {
+	{' ',"　"},{'!',"！"},{'"',"”"},{'#',"＃"},{'$',"＄"},{'%',"％"},{'&',"＆"},{'\'',"’"},
+	{'(',"（"},{')',"）"},{'*',"＊"},{'+',"＋"},{',',"、"},{'-',"－"},{'.',"。"},{'/',"／"},
+	{':',"："},{';',"；"},{'<',"＜"},{'=',"＝"},{'>',"＞"},{'?',"？"},{'@',"＠"},{'[',"［"},
+	{'\\',"￥"},{']',"］"},{'^',"＾"},{'_',"＿"},{'`',"‘"},{'{',"｛"},{'|',"｜"},{'}',"｝"},{'~',"～"}
+};
+
+//可能な限りの半角→全角変換
+char* LTool::hankakuToZenkaku( const char *src,char *dst )
+{
+	int i,j,x,y;
+	if( dst ) dst[0] = '\0';
+	if( strnull(src) ) return NULL;
+	if( !dst && (dst = (char*)malloc( strlen( src ) * 3 + 1 )) == NULL ) return NULL;
+
+	for( i = 0,j = 0; src[i] != '\0'; i++ ){
+		if( (unsigned char)src[i] >= 0x80 ){ //全角
+			if( (unsigned char)src[i] >= 0xE0 ){
+				dst[j++] = src[i];
+				dst[j++] = src[i + 1];
+				dst[j++] = src[i + 2];
+				i += 2;
+			}else if( (unsigned char)src[i] != 0x5C ){
+				dst[j++] = src[i];
+				dst[j++] = src[i + 1];
+				i++;
+			}else{
+				dst[j++] = src[i];
+			}
+		}else{ //半角現る
+			if( src[i] >= 'A' && src[i] <= 'Z' ){
+				dst[j++] = 0xEF;
+				dst[j++] = 0xBC;
+				dst[j++] = 0xA1 + (src[i] - 'A');
+			}
+			else if( src[i] >= 'a' && src[i] <= 'z' ){
+				dst[j++] = 0xEF;
+				dst[j++] = 0xBD;
+				dst[j++] = 0x81 + (src[i] - 'a');
+			}
+			else if( src[i] >= '0' && src[i] <= '9' ){
+				dst[j++] = 0xEF;
+				dst[j++] = 0xBC;
+				dst[j++] = 0x90 + (src[i] - '0');
+			}
+			else{
+				for( x = 0; x < countof(gHanZenTbl); x++ ){
+					if( src[i] == gHanZenTbl[x].han ){
+						y = strlen( gHanZenTbl[x].zen );
+						memcpy( dst + j,gHanZenTbl[x].zen,y );
+						j += y; break;
+					}
+				}
+				if( x >= countof(gHanZenTbl) ) dst[j++] = src[i]; //GIVE UP
+			}
+		}
+	}dst[j] = '\0';
+	return dst;
+}
+
+//可能な限りの全角→半角変換
+char* LTool::zenkakuToHankaku( const char *src,char *dst )
+{
+	int i,j,x;
+	if( dst ) dst[0] = '\0';
+	if( strnull(src) ) return NULL;
+	if( !dst && (dst = (char*)malloc( strlen( src ) + 1 )) == NULL ) return NULL;
+
+	for( i = 0,j = 0; src[i] != '\0'; i++ ){
+		if( (unsigned char)src[i] < 0x80 ){ //半角
+			dst[j++] = src[i]; continue;
+		}
+		if( (unsigned char)src[i] == 0xEF &&
+			(unsigned char)src[i + 1] == 0xBC &&
+			(unsigned char)src[i + 2] >= 0x90 &&
+			(unsigned char)src[i + 2] <= 0x99 ){
+			dst[j++] = '0' + ((unsigned char)src[i + 2] - 0x90);
+			i += 2; continue;
+		}
+		if( (unsigned char)src[i] == 0xEF &&
+			(unsigned char)src[i + 1] == 0xBC &&
+			(unsigned char)src[i + 2] >= 0xA1 &&
+			(unsigned char)src[i + 2] <= 0xBA ){
+			dst[j++] = 'A' + ((unsigned char)src[i + 2] - 0xA1);
+			i += 2; continue;
+		}
+		if( (unsigned char)src[i] == 0xEF &&
+			(unsigned char)src[i + 1] == 0xBD &&
+			(unsigned char)src[i + 2] >= 0x81 &&
+			(unsigned char)src[i + 2] <= 0x9A ){
+			dst[j++] = 'a' + ((unsigned char)src[i + 2] - 0x81);
+			i += 2; continue;
+		}
+		for( x = 0; x < countof(gHanZenTbl); x++ ){
+			if( strncmp( &(src[i]),gHanZenTbl[x].zen,strlen( gHanZenTbl[x].zen ) ) == 0 ){
+				dst[j++] = gHanZenTbl[x].han; break;
+			}
+		}
+		if( (unsigned char)src[i] >= 0xE0 ){
+			if( x >= countof(gHanZenTbl) ){
+				dst[j++] = src[i];
+				dst[j++] = src[i + 1];
+				dst[j++] = src[i + 2];
+			}i += 2;
+		}else{
+			if( x >= countof(gHanZenTbl) ){
+				dst[j++] = src[i];
+				dst[j++] = src[i + 1];
+			}i++;
+		}
+	}dst[j] = '\0';
+	return dst;
+}
+

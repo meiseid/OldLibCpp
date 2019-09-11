@@ -21,6 +21,8 @@ public:
 	static void makeCostString( int cost_num,char *cost_str );
 	static int widthText( const char *text );
 	static void trimingString( const char *src,char *dst,int lim,const char *ccr,const char *trm );
+	static char* hankakuToZenkaku( const char *src,char *dst );
+	static char* zenkakuToHankaku( const char *src,char *dst );
 };
 
 #endif //__LTool_h__
