@@ -23,6 +23,7 @@ public:
 	static void trimingString( const char *src,char *dst,int lim,const char *ccr,const char *trm );
 	static char* hankakuToZenkaku( const char *src,char *dst );
 	static char* zenkakuToHankaku( const char *src,char *dst );
+	static unsigned char* base64Encode( const unsigned char *str,int length,int *ret_length );
 };
 
 #endif //__LTool_h__
