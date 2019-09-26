@@ -10,6 +10,8 @@ public:
 	static int sizeFile( const char *path,time_t *mtime );
 	static void urlDecode( std::string &src,std::string &dst );
 	static void urlEncode( std::string &src,std::string &dst );
+	static void xmlDecode( std::string &src,std::string &dst );
+	static void xmlEncode( std::string &src,std::string &dst );
 	static std::string readTextFile( const char *path );
 	static void readConfigFile( std::string path,std::vector<SParam> &params );
 	static void readSinglePart( char *mem,size_t len,char sep,std::vector<SParam> &params );

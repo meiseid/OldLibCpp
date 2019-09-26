@@ -68,6 +68,31 @@ void LTool::urlEncode( std::string &src,std::string &dst )
 	}
 }
 
+void LTool::xmlDecode( std::string &src,std::string &dst )
+{
+	if( src.empty() ) return; //NOP
+
+	dst.append(src);
+	strReplace( dst,"&amp;","&" );
+	strReplace( dst,"&quot;","\"" );
+	strReplace( dst,"&lt;","<" );
+	strReplace( dst,"&gt;",">" );
+	strReplace( dst,"&#x27;","'" );
+	strReplace( dst,"&#x60;","`" );
+}
+
+void LTool::xmlEncode( std::string &src,std::string &dst )
+{
+	if( src.empty() ) return; //NOP
+	dst.append(src);
+	strReplace( dst,"&","&amp;" );
+	strReplace( dst,"\"","&quot;" );
+	strReplace( dst,"<","&lt;" );
+	strReplace( dst,">","&gt;" );
+	strReplace( dst,"'","&#x27;" );
+	strReplace( dst,"`","&#x60;" );
+}
+
 std::string LTool::readTextFile( const char *path )
 {
 	std::string reply = std::string();

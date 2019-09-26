@@ -46,6 +46,7 @@ typedef struct {
 //classes
 #include "LFile.h"
 #include "LSocket.h"
+#include "LDatabase.h"
 #include "LTool.h"
 #include "LApplication.h"
 
