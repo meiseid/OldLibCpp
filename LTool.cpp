@@ -237,6 +237,28 @@ void LTool::strReplace( std::string &str,std::string from,std::string to )
 	}
 }
 
+int LTool::strSplit( const char *src,char key,std::vector<std::string> &dst )
+{
+	int counts = 0;
+	dst.clear();
+
+	if( strnull(src) ) return counts;
+
+	char *p1,*p2; size_t len;
+
+	for( p1 = (char*)src; (p2 = strchr( p1,key )) != NULL ||
+		(p2 = strchr( p1,'\0' )) != NULL; p1 = p2 + 1 ){
+		len = (size_t)p2 - (size_t)p1;
+		if( len > 0 ){
+			std::string as = std::string( p1,len );
+			dst.push_back( as );
+			counts++;
+		}
+		if( *p2 == '\0' ) break;
+	}
+	return counts;
+}
+
 void LTool::makeCostString( int cost_num,char *cost_str )
 {
 	char cost[32 + 1],tsoc[32 + 1];

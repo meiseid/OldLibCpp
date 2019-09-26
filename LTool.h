@@ -20,6 +20,7 @@ public:
 	static void getDateText( const struct tm *src,char *dst,size_t len );
 	static int strAppend( std::string &str,const char *fmt, ... );
 	static void strReplace( std::string &str,std::string from,std::string to );
+	static int strSplit( const char *src,char key,std::vector<std::string> &dst );
 	static void makeCostString( int cost_num,char *cost_str );
 	static int widthText( const char *text );
 	static void trimingString( const char *src,char *dst,int lim,const char *ccr,const char *trm );
