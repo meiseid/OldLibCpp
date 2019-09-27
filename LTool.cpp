@@ -278,83 +278,38 @@ void LTool::makeCostString( int cost_num,char *cost_str )
 	cost_str[i] = '\0';
 }
 
-//全角を2、半角を1とした長さ計算
-int LTool::widthText( const char *text )
+//ヘッダー文字列作成 全角を2、半角を1として扱う
+void LTool::headerText( const char *src,char *dst,int count )
 {
-	if( !text ) return 0;
-	int i,j;
-	for( i = 0,j = 0; text[i] != '\0'; i++ ){
-		if( (unsigned char)text[i] >= 0x80 ){
-			j += 2;
-			if( (unsigned char)text[i] >= 0xE0 ) i += 2;
-			else if( (unsigned char)text[i] != 0x5C ) i++;
-		}else j++;
-	}
-	return j; //String Width
-}
-
-//省略文字列の作成 全角を2、半角を1として扱う
-//HTMLタグ囲い(<～>)はスキップする
-//ccr:改行文字の変換文字 trm:終端省略文字
-void LTool::trimingString( const char *src,char *dst,int lim,const char *ccr,const char *trm )
-{
-	int i,j,now,btag,add,adk;
-
-	if( !src || !dst ) return;
-	for( i = 0,j = 0,now = 0,btag = 0,add = 0,adk = 0,dst[0] = '\0'; src[i] != '\0'; i++ ){
+	dst[0] = '\0';
+	if( strnull(src) ) return;
+	int i,j,k;
+	for( i = 0,j = 0,k = 0; src[i] != '\0'; i++ ){
+		if( k >= count ){
+			break;
+		}
 		if( (unsigned char)src[i] >= 0x80 ){ //全角
-			if( (unsigned char)src[i] >= 0xE0 ){ //3byte
-				i += 2;
-				if( btag ) continue;
-				if( now + 2 > lim ) break;
-				dst[j++] = src[i - 2]; dst[j++] = src[i - 1]; dst[j++] = src[i]; dst[j] = '\0'; now += 2;
-				if( strncmp( &(src[i - 2]),"。",strlen( "。" ) ) == 0 ) adk = j;
-				add = 3;
+			if( (unsigned char)src[i] >= 0xE0 ){ //3バイト全角
+				memcpy( dst + j,src + i,3 );
+				i += 2; j += 3;
 			}
-			else{ //2byte
-				i++;
-				if( btag ) continue;
-				if( now + 2 > lim ) break;
-				dst[j++] = src[i - 1]; dst[j++] = src[i]; dst[j] = '\0'; now += 2;
-				add = 2;
+			else if( (unsigned char)src[i] != 0x5C ){ //2バイト全角(特殊)
+				memcpy( dst + j,src + i,2 );
+				i++; j += 2;
 			}
+			else{ //1バイト全角(特殊)
+				dst[j++] = src[i];
+			}
+			k += 2;
 		}
 		else{ //半角
-			if( btag ){
-				if( src[i] == '>' ) btag = 0;
-				continue;
-			}
-			if( src[i] == '<' ){
-				btag = 1;
-				continue;
-			}
-			if( src[i] == '\r' && src[i + 1] == '\n' ){
-				continue;
-			}
-			if( src[i] == '\r' || src[i] == '\n' ){
-				adk = j;
-				if( !ccr ) continue;
-				if( (unsigned char)ccr[0] >= 0x80 ){
-					if( now + 2 > lim ) break;
-					strcat( dst,ccr ); j += strlen( ccr ); now += 2;
-					add = strlen( ccr );
-				}
-				else{
-					if( now + 1 > lim ) break;
-					strcat( dst,ccr ); j += strlen( ccr ); now++;
-					add = strlen( ccr );
-				}
-			}else{
-				if( now + 1 > lim ) break;
-				dst[j++] = src[i]; dst[j] = '\0'; now++;
-				add = 1;
-			}
+			dst[j++] = src[i];
+			k++;
 		}
 	}
-	if( src[i] != '\0' && add ){
-		if( trm ) strcpy( &(dst[j - add]),trm );
-		else if( adk > 0 ) dst[adk] = '\0';
-		else strcpy( &(dst[j - add]),"..." );
+	dst[j] = '\0';
+	if( src[i] != '\0' ){
+		strcat( dst,"..." );
 	}
 }
 
@@ -526,4 +481,3 @@ unsigned char* LTool::base64Encode( const unsigned char *str,int length,int *ret
         *p = '\0';
         return result;
 }
-

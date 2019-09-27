@@ -22,8 +22,7 @@ public:
 	static void strReplace( std::string &str,std::string from,std::string to );
 	static int strSplit( const char *src,char key,std::vector<std::string> &dst );
 	static void makeCostString( int cost_num,char *cost_str );
-	static int widthText( const char *text );
-	static void trimingString( const char *src,char *dst,int lim,const char *ccr,const char *trm );
+	static void headerText( const char *src,char *dst,int count );
 	static char* hankakuToZenkaku( const char *src,char *dst );
 	static char* zenkakuToHankaku( const char *src,char *dst );
 	static unsigned char* base64Encode( const unsigned char *str,int length,int *ret_length );
