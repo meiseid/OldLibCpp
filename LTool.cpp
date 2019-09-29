@@ -259,6 +259,21 @@ int LTool::strSplit( const char *src,char key,std::vector<std::string> &dst )
 	return counts;
 }
 
+std::string LTool::trimingText( const std::string &src )
+{
+	const char* meta = " \t\v\r\n";
+	std::string dst = std::string();
+
+	std::string::size_type left = src.find_first_not_of(meta);
+
+	if (left != std::string::npos){
+		std::string::size_type right = src.find_last_not_of(meta);
+		dst = src.substr(left, right - left + 1);
+	}
+
+	return dst;
+}
+
 void LTool::makeCostString( int cost_num,char *cost_str )
 {
 	char cost[32 + 1],tsoc[32 + 1];
