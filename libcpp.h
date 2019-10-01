@@ -32,6 +32,8 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <algorithm>
+#include <functional>
 
 //defines
 #define strnull(x) (x == NULL || x[0] == '\0')
