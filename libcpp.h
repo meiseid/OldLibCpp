@@ -45,6 +45,11 @@ typedef struct {
 	std::string mText;
 }SParam;
 
+typedef struct {
+	std::string mName;
+	double mValue;
+}SNumber;
+
 //classes
 #include "LFile.h"
 #include "LSocket.h"
